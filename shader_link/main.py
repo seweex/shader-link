@@ -1,8 +1,10 @@
 
 import argparse
 
-from logger import *
-from executor import *
+from pathlib import Path
+
+from shader_link.logger import Logger
+from shader_link.executor import Executor, FilesToCompile
 
 def main():
     logger = Logger()

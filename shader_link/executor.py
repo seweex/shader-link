@@ -3,7 +3,7 @@ import shutil
 import subprocess
 
 from pathlib import Path
-from logger import Logger
+from shader_link.logger import Logger
 
 class FilesToCompile:
     def __init__(self, in_path : Path, out_path : Path) -> None:
