@@ -49,7 +49,7 @@ python -m shader_link.main --input "path/to/file/or/dir" --output "result"
 
 ### Shader Source Code Requirements:
 
-- files must have an extension that represents the shader stage (.vert, .frag etc.)
+- Files must have an extension that represents the shader stage (.vert, .frag etc.)
 
 
 ## License
