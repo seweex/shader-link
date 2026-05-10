@@ -8,6 +8,7 @@ It's a useful script to simplify GLSL shader compiling
 
 - Massive shader compilation
 - Flexible input and output paths
+- Caches compilations 
 - Very simple usage
 
 
@@ -46,6 +47,7 @@ python -m shader_link.main --input "path/to/file/or/dir" --output "result"
 
 - **--input** *or* **-i**: sets up the path to shader source code (file or folder), **required**
 - **--output** *or* **-o**: sets up the path to output binaries (only folder), **required**
+- **--replace** *or* **-r**: replaces already compiled files (recompile all) 
 
 ### Shader Source Code Requirements:
 
