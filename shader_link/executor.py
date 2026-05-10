@@ -5,6 +5,10 @@ import subprocess
 from pathlib import Path
 from shader_link.logger import Logger
 
+class Settings:
+    def __init__ (self, replace : bool) -> None:
+        self.replace = replace
+
 class FilesToCompile:
     def __init__(self, in_path : Path, out_path : Path) -> None:
         in_files = None
@@ -35,13 +39,13 @@ class Executor:
 
         self.compiler_path = path
 
-    def compile (self, target : FilesToCompile, logger : Logger) -> None:
+    def compile (self, settings : Settings, target : FilesToCompile, logger : Logger) -> None:
         for file in target.in_files:
             name = file.replace ('\\', '/').split ('/') [-1]
             out = f'{target.out_dir}/{name}.bin'
 
-            if Path(out).exists():
-                logger.report_failed_compilation(name, 'File already exists')
+            if not settings.replace and Path(out).exists():
+                logger.report_failed_compilation (name, 'File already exists')
                 continue
 
             command = [self.compiler_path, file, '-o', out]
