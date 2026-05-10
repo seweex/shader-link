@@ -16,7 +16,7 @@ def main():
             "-r", "--replace",
             required=False,
             default=False,
-            help="replace existing output files",
+            help="recompile forced with no skips",
             action="store_true")
 
         parser.add_argument(

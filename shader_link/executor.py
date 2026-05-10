@@ -1,9 +1,11 @@
 
 import shutil
+import hashlib
 import subprocess
 
 from pathlib import Path
 from shader_link.logger import Logger
+from shader_link.cache import Cacher
 
 class Settings:
     def __init__ (self, replace : bool) -> None:
@@ -39,19 +41,34 @@ class Executor:
 
         self.compiler_path = path
 
+    def calc_checksum (self, path : str) -> str:
+        with open(path, 'rb') as file:
+            checksum = hashlib.sha256 (file.read()).hexdigest()
+            return checksum
+
     def compile (self, settings : Settings, target : FilesToCompile, logger : Logger) -> None:
+        cacher = Cacher (target.out_dir)
+
         for file in target.in_files:
             name = file.replace ('\\', '/').split ('/') [-1]
             out = f'{target.out_dir}/{name}.bin'
 
-            if not settings.replace and Path(out).exists():
-                logger.report_failed_compilation (name, 'File already exists')
-                continue
+            curr_checksum = self.calc_checksum (file)
+
+            if not settings.replace:
+                old_checksum = cacher.checksum (name)
+
+                if old_checksum == curr_checksum and Path(out).exists():
+                    logger.report_skip (name)
+                    continue
 
             command = [self.compiler_path, file, '-o', out]
             proc = subprocess.run (command, capture_output=True, text=True)
 
             if proc.returncode == 0:
+                cacher.update (name, curr_checksum)
                 logger.report_successful_compilation (name)
             else:
                 logger.report_failed_compilation (name, proc.stderr)
+
+        cacher.save ()
