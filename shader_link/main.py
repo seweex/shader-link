@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 
 from shader_link.logger import Logger
-from shader_link.executor import Executor, FilesToCompile
+from shader_link.executor import Executor, FilesToCompile, Settings
 
 def main():
     logger = Logger()
@@ -12,8 +12,25 @@ def main():
     try:
         parser = argparse.ArgumentParser()
 
-        parser.add_argument("-i", "--input", required=True, help="input shader directory or file")
-        parser.add_argument("-o", "--output", required=False, help="output shader directory or file", default="./out/")
+        parser.add_argument(
+            "-r", "--replace",
+            required=False,
+            default=False,
+            help="recompile forced with no skips",
+            action="store_true")
+
+        parser.add_argument(
+            "-i", "--input",
+            required=True,
+            help="input shader directory or file",
+            type=str)
+
+        parser.add_argument(
+            "-o", "--output",
+            required=False,
+            default="./out/",
+            help="output shader directory or file",
+            type=str)
 
         args = parser.parse_args()
 
@@ -21,9 +38,11 @@ def main():
         output_path = Path (str (args.output))
 
         executor = Executor ()
+        settings = Settings (args.replace)
         target = FilesToCompile (input_path, output_path)
 
-        executor.compile (target, logger)
+        executor.compile (settings, target, logger)
+
     except KeyboardInterrupt:
         logger.report_interrupted()
     except Exception as error:
