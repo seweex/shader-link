@@ -1,0 +1,10 @@
+
+[project]
+name = "shader-link"
+version = "0.1.0"
+description = "CLI tool to automate shader compilation"
+dependencies = []
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

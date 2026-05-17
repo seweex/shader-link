@@ -1,29 +1,32 @@
 
-import os
-
 class Logger:
-    GREEN = '\033[92m'
-    RED = '\033[91m'
-    BLUE = '\033[96m'
-    RESET = '\033[0m'
+    _RED = '\033[91m'
+    _GREEN = '\033[92m'
+    _YELLOW = '\033[93m'
+    _BLUE = '\033[96m'
+    _PURPLE = '\033[95m'
+    _RESET = '\033[0m'
 
-    def __init__(self):
-        os.system('')
+    @staticmethod
+    def skip (name : str):
+        print (f'Skipped compiled {Logger._PURPLE}{name}{Logger._RESET}')
 
-    def report_skip (self, name : str):
-        print (f'Skipped compiled {self.BLUE}{name}{self.RESET}')
+    @staticmethod
+    def successful (file : str):
+        print (f'Successfully compiled {Logger._GREEN}{file}{Logger._RESET}')
 
-    def report_successful_compilation (self, file : str):
-        print (f'Successfully compiled {self.GREEN}{file}{self.RESET}')
+    @staticmethod
+    def failed (file : str, error : str):
+        print (f'Failed to compile {Logger._RED}{file}{Logger._RESET}: {error}')
 
-    def report_failed_compilation (self, file : str, error : str):
-        print (f'Failed to compile {self.RED}{file}{self.RESET}: {error}')
+    @staticmethod
+    def done ():
+        print (f'{Logger._BLUE}Compilation done{Logger._RESET}')
 
-    def report_done (self):
-        print (f'{self.GREEN}[!] Compilation done{self.RESET}')
+    @staticmethod
+    def fatal (error : str):
+        print (f'Fatal error: {Logger._RED}{error}{Logger._RESET}')
 
-    def report_fatal (self, error : str):
-        print (f'Fatal error: {self.RED}{error}{self.RESET}')
-
-    def report_interrupted (self):
-        print ('Interrupted')
+    @staticmethod
+    def interrupted ():
+        print (f'{Logger._YELLOW}Interrupted{Logger._RESET}')

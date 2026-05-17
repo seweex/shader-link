@@ -40,14 +40,14 @@ source .venv/bin/activate
 ## Usage 
 
 ```bash
-python -m shader_link.main --input "path/to/file/or/dir" --output "result"
+python -m shader_link.main -f --input "path/to/file/or/dir" --output "result"
 ```
 
 ### Arguments:
 
 - **--input** *or* **-i**: sets up the path to shader source code (file or folder), **required**
 - **--output** *or* **-o**: sets up the path to output binaries (only folder), **required**
-- **--replace** *or* **-r**: replaces already compiled files (recompile all) 
+- **--forced** *or* **-f**: replaces already compiled files (recompile all) 
 
 ### Shader Source Code Requirements:
 
