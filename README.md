@@ -7,6 +7,8 @@ It's a useful script to simplify GLSL shader compiling
 ## Features
 
 - Massive shader compilation
+- Shader export to C++ headers
+- Export as constexpr std::array of binaries
 - Flexible input and output paths
 - Caches compilations 
 - Very simple usage
@@ -40,14 +42,15 @@ source .venv/bin/activate
 ## Usage 
 
 ```bash
-python -m shader_link.main --input "path/to/file/or/dir" --output "result"
+python -m shader_link -f --input "path/to/file/or/dir" --output "result" --export "path/to/exports"
 ```
 
 ### Arguments:
 
 - **--input** *or* **-i**: sets up the path to shader source code (file or folder), **required**
 - **--output** *or* **-o**: sets up the path to output binaries (only folder), **required**
-- **--replace** *or* **-r**: replaces already compiled files (recompile all) 
+- **--export** *or* **-e**: sets up the path to hpp-export spv (only folder), **default=None**
+- **--forced** *or* **-f**: replaces already compiled files (recompile all) 
 
 ### Shader Source Code Requirements:
 

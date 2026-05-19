@@ -1,29 +1,39 @@
 
 import json
+import shader_link.config
 
-from pathlib import Path
+class Cache:
+    def __init__ (self, data : dict):
+        self.data: dict = data
 
-class Cacher:
-    CACHE_FILENAME = "shader-link.cache.json"
-    SRC_CODE_CHECKSUM_KEY = "source-code-checksum"
+    def update (self, filename : str, checksum : str) -> None:
+        self.data [filename] = { "checksum" : checksum }
 
-    def __init__(self, path : str):
-        file = Path (path + '/' + self.CACHE_FILENAME)
-
-        if file.is_file ():
-            with open (file, 'r') as json_file:
-                self.cache = json.load (json_file)
+    def is_actual (self, filename : str, checksum : str) -> bool:
+        if filename in self.data:
+            return self.data [filename] ["checksum"] == checksum
         else:
-            self.cache = dict()
+            return False
 
-        self.path = str (file)
+class CacheStorage:
+    def __init__ (self, config : shader_link.config.Config):
+        self.path = config.cache_path
 
-    def update (self, file, checksum : str):
-        self.cache [file] = { self.SRC_CODE_CHECKSUM_KEY : checksum }
+    @staticmethod
+    def gen () -> Cache:
+        return Cache ({})
 
-    def checksum (self, file):
-        return self.cache.setdefault (file, dict ()).get (self.SRC_CODE_CHECKSUM_KEY)
+    def load (self) -> Cache:
+        if not self.path.exists ():
+            return self.gen ()
 
-    def save (self):
-        with open (self.path, 'w') as file:
-            json.dump (self.cache, file, indent=4)
+        try:
+            with open (self.path, 'r', encoding='utf-8') as file:
+                return Cache (json.load (file))
+        except json.JSONDecodeError:
+            self.path.unlink ()
+            return self.gen ()
+
+    def dump (self, cache : Cache) -> None:
+        with open (self.path, 'w', encoding='utf-8') as file:
+            json.dump (cache.data, file, indent=4, ensure_ascii=False)
