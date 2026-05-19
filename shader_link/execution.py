@@ -30,7 +30,7 @@ class Task:
 
 class Compiler:
     @staticmethod
-    def _calc_checksum (file_path : str) -> str:
+    def calc_checksum (file_path : str) -> str:
         with open (file_path, 'rb') as file:
             return hashlib.sha256 (file.read ()).hexdigest()
 
@@ -48,7 +48,7 @@ class Compiler:
         checksum = None
 
         if not forced:
-            checksum = self._calc_checksum (info ['input_path'])
+            checksum = self.calc_checksum (info ['input_path'])
 
             if cache.is_actual (info ['name'], checksum):
                 shader_link.logger.Logger.skip (info ['name'])

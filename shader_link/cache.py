@@ -19,16 +19,20 @@ class CacheStorage:
     def __init__ (self, config : shader_link.config.Config):
         self.path = config.cache_path
 
+    @staticmethod
+    def gen () -> Cache:
+        return Cache ({})
+
     def load (self) -> Cache:
         if not self.path.exists ():
-            return Cache ({})
+            return self.gen ()
 
         try:
             with open (self.path, 'r', encoding='utf-8') as file:
                 return Cache (json.load (file))
         except json.JSONDecodeError:
             self.path.unlink ()
-            return Cache ({})
+            return self.gen ()
 
     def dump (self, cache : Cache) -> None:
         with open (self.path, 'w', encoding='utf-8') as file:
