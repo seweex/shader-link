@@ -10,23 +10,32 @@ import shader_link.logger
 
 class Task:
     @staticmethod
-    def _group_file_info (file_path : pathlib.Path, out_path : pathlib.Path) -> dict:
+    def _group_file_info (
+            file_path : pathlib.Path,
+            out_path : pathlib.Path,
+            export_path : pathlib.Path | None) -> dict:
         return {
             "input_path": str (file_path.absolute ()),
             "output_path": str ((out_path / (file_path.name + '.spv')).absolute ()),
+            "export_path": str ((export_path / (file_path.name + '.hpp')).absolute ()) if export_path else None,
             "name": file_path.stem
         }
 
     @staticmethod
-    def _group_input_files (input_path : pathlib.Path, output_path : pathlib.Path) -> list[dict]:
+    def _group_input_files (
+            input_path : pathlib.Path,
+            output_path : pathlib.Path,
+            export_path : pathlib.Path | None) -> list[dict]:
+
         if input_path.is_file ():
-            return [Task._group_file_info (input_path, output_path)]
+            return [Task._group_file_info (input_path, output_path, export_path)]
         else:
-            return [Task._group_file_info (file, output_path) for file in input_path.iterdir ()]
+            return [Task._group_file_info (file, output_path, export_path) for file in input_path.iterdir ()]
 
     def __init__ (self, config : shader_link.config.Config) -> None:
-        self.input_files = self._group_input_files (config.input_path, config.output_path)
+        self.input_files = self._group_input_files (config.input_path, config.output_path, config.export_path)
         self.forced = config.forced
+        self.export = config.export_path is not None
 
 class Compiler:
     @staticmethod
@@ -44,7 +53,7 @@ class Compiler:
     def __init__ (self, config : shader_link.config.Config) -> None:
         self.compiler_path = str (config.compiler_path.absolute ())
 
-    def compile (self, forced : bool, info : dict, cache : shader_link.cache.Cache) -> None:
+    def compile (self, forced : bool, info : dict, cache : shader_link.cache.Cache) -> bool:
         checksum = None
 
         if not forced:
@@ -52,7 +61,7 @@ class Compiler:
 
             if cache.is_actual (info ['name'], checksum):
                 shader_link.logger.Logger.skip (info ['name'])
-                return None
+                return False
 
         command = self._form_command (info)
         result = self._submit_compilation (command)
@@ -65,4 +74,4 @@ class Compiler:
         else:
             shader_link.logger.Logger.failed (info['name'], result.stderr)
 
-        return None
+        return True
