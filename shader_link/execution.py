@@ -70,8 +70,8 @@ class Compiler:
             cache.update (info['name'], checksum)
 
         if result.returncode == 0:
-            shader_link.logger.Logger.successful (info['name'])
+            shader_link.logger.Logger.successful_compilation (info['name'])
         else:
-            shader_link.logger.Logger.failed (info['name'], result.stderr)
+            shader_link.logger.Logger.failed_compilation (info['name'], result.stderr)
 
         return True

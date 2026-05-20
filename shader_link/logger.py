@@ -12,16 +12,20 @@ class Logger:
         print (f'Skipped compiled {Logger._PURPLE}{name}{Logger._RESET}')
 
     @staticmethod
-    def successful (file : str):
-        print (f'Successfully compiled {Logger._GREEN}{file}{Logger._RESET}')
+    def successful_compilation (file : str):
+        print (f'Compiled {Logger._GREEN}{file}{Logger._RESET}')
 
     @staticmethod
-    def failed (file : str, error : str):
+    def failed_compilation (file : str, error : str):
         print (f'Failed to compile {Logger._RED}{file}{Logger._RESET}: {error}')
 
     @staticmethod
-    def done ():
-        print (f'{Logger._BLUE}Compilation done{Logger._RESET}')
+    def successful_export (file : str):
+        print (f'Exported {Logger._GREEN}{file}{Logger._RESET}')
+
+    @staticmethod
+    def failed_export (file : str, error : str):
+        print (f'Failed to export {Logger._RED}{file}{Logger._RESET}: {error}')
 
     @staticmethod
     def fatal (error : str):

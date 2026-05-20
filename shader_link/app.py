@@ -1,5 +1,6 @@
 
 import os
+import pathlib
 
 import shader_link.config
 import shader_link.cache
@@ -33,6 +34,6 @@ class App:
                 continue
 
             if self.task.export:
-                self.exporter.export (target ['output_path'], target ['export_path'], target ['name'])
+                self.exporter.export (pathlib.Path(target ['output_path']), pathlib.Path(target ['export_path']), target ['name'])
 
         self.cache_storage.dump (cache)

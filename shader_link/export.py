@@ -3,6 +3,8 @@ import pathlib
 import struct
 import re
 
+import shader_link.logger
+
 class Exporter:
     @staticmethod
     def _make_varname (name: str) -> str:
@@ -57,8 +59,15 @@ namespace shader_link_compiled
 
     @staticmethod
     def export (spv : pathlib.Path, out: pathlib.Path, name : str):
-        raw = Exporter._read_words (spv)
-        formatted = Exporter._format_words (raw)
-        varname = Exporter._make_varname (name)
+        try:
+            raw = Exporter._read_words (spv)
+            formatted = Exporter._format_words (raw)
+            varname = Exporter._make_varname (name)
 
-        Exporter._write_header (formatted, out, varname)
+            Exporter._write_header (formatted, out, varname)
+        except Exception as exc:
+            shader_link.logger.Logger.failed_export (out.name, str (exc))
+            raise
+        else:
+            shader_link.logger.Logger.successful_export (out.name)
+
