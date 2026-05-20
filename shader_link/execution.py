@@ -18,7 +18,7 @@ class Task:
             "input_path": str (file_path.absolute ()),
             "output_path": str ((out_path / (file_path.name + '.spv')).absolute ()),
             "export_path": str ((export_path / (file_path.name + '.hpp')).absolute ()) if export_path else None,
-            "name": file_path.stem
+            "name": file_path.name
         }
 
     @staticmethod

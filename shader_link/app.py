@@ -9,16 +9,16 @@ import shader_link.logger
 
 class App:
     @staticmethod
-    def _make_config ():
+    def make_config ():
         args = shader_link.config.Arguments ()
         compiler = shader_link.config.Compiler ()
 
         return shader_link.config.Config (args, compiler)
 
-    def __init__ (self) -> None:
+    def __init__ (self, config : shader_link.config.Config) -> None:
         os.system ('')
 
-        self.config = self._make_config ()
+        self.config = config
 
         self.cache_storage = shader_link.cache.CacheStorage (self.config)
         self.task = shader_link.execution.Task (self.config)
