@@ -36,6 +36,9 @@ python -m venv .venv
 .venv\bin\activate.bat
 # for linux:
 source .venv/bin/activate
+
+# for tests
+pip install pytest
 ```
 
 
@@ -56,6 +59,14 @@ python -m shader_link -f --input "path/to/file/or/dir" --output "result" --expor
 
 - Files must have an extension that represents the shader stage (.vert, .frag etc.)
 
+
+## Tests
+
+In the root path call
+
+```bash
+pytest -v
+```
 
 ## License
 

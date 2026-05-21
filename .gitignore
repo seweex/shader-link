@@ -1,3 +1,4 @@
 .idea
 .venv
 shader_link/__pycache__
+tests/__pycache__

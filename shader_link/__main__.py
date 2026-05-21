@@ -3,7 +3,8 @@ import shader_link.logger
 
 def main ():
     try:
-        app = shader_link.app.App()
+        config = shader_link.app.App.make_config ()
+        app = shader_link.app.App (config)
         app.run()
     except KeyboardInterrupt:
         shader_link.logger.Logger.interrupted()

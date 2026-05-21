@@ -18,7 +18,7 @@ class Task:
             "input_path": str (file_path.absolute ()),
             "output_path": str ((out_path / (file_path.name + '.spv')).absolute ()),
             "export_path": str ((export_path / (file_path.name + '.hpp')).absolute ()) if export_path else None,
-            "name": file_path.stem
+            "name": file_path.name
         }
 
     @staticmethod
@@ -70,8 +70,8 @@ class Compiler:
             cache.update (info['name'], checksum)
 
         if result.returncode == 0:
-            shader_link.logger.Logger.successful (info['name'])
+            shader_link.logger.Logger.successful_compilation (info['name'])
         else:
-            shader_link.logger.Logger.failed (info['name'], result.stderr)
+            shader_link.logger.Logger.failed_compilation (info['name'], result.stderr)
 
         return True
