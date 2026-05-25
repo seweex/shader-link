@@ -1,4 +1,5 @@
 
+import pytest
 import conftest
 
 import shader_link.app
@@ -27,7 +28,8 @@ def test_fail (config, bad_compiler, input_files, tracker):
     _disable_export (config)
     _disable_forced (config)
 
-    _run_app (config, bad_compiler)
+    with pytest.raises (Exception):
+        _run_app (config, bad_compiler)
 
     tracker.successful_compilation.assert_not_called ()
     tracker.failed_compilation.assert_called ()

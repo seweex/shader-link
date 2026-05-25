@@ -74,6 +74,7 @@ class Compiler:
             shader_link.logger.Logger.successful_compilation (info['name'])
         else:
             shader_link.logger.Logger.failed_compilation (info['name'], result.stderr)
+            raise Exception ('Failed to compile')
 
         return True
 
