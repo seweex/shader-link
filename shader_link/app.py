@@ -25,6 +25,12 @@ class App:
         self.task = shader_link.execution.Task (self.config)
         self.compiler = shader_link.execution.Compiler (self.config)
         self.exporter = shader_link.export.Exporter ()
+        self.deployer = shader_link.execution.Deployer (self.config)
+
+        self.config.temp_output_path.mkdir(parents=True, exist_ok=True)
+
+        if self.config.temp_export_path is not None:
+            self.config.temp_export_path.mkdir(parents=True, exist_ok=True)
 
     def run (self):
         cache = self.cache_storage.load ()
@@ -37,3 +43,5 @@ class App:
                 self.exporter.export (pathlib.Path(target ['output_path']), pathlib.Path(target ['export_path']), target ['name'])
 
         self.cache_storage.dump (cache)
+        self.deployer.deploy ()
+        self.deployer.delete_temps ()
