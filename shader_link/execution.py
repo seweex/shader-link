@@ -1,6 +1,7 @@
 
 import hashlib
 import subprocess
+import shutil
 
 import pathlib
 
@@ -33,9 +34,9 @@ class Task:
             return [Task._group_file_info (file, output_path, export_path) for file in input_path.iterdir ()]
 
     def __init__ (self, config : shader_link.config.Config) -> None:
-        self.input_files = self._group_input_files (config.input_path, config.output_path, config.export_path)
+        self.input_files = self._group_input_files (config.input_path, config.temp_output_path, config.temp_export_path)
         self.forced = config.forced
-        self.export = config.export_path is not None
+        self.export = config.temp_export_path is not None
 
 class Compiler:
     @staticmethod
@@ -73,5 +74,36 @@ class Compiler:
             shader_link.logger.Logger.successful_compilation (info['name'])
         else:
             shader_link.logger.Logger.failed_compilation (info['name'], result.stderr)
+            raise Exception ('Failed to compile')
 
         return True
+
+class Deployer:
+    @staticmethod
+    def _deploy_files (src_path : pathlib.Path, dst_path : pathlib.Path) -> None:
+        dst_path.mkdir (parents=True, exist_ok=True)
+
+        for item in src_path.iterdir ():
+            if item.is_file():
+                shutil.copy2(item, dst_path / item.name)
+
+    def __init__ (self, config : shader_link.config.Config) -> None:
+        self.temp_output_path = config.temp_output_path
+        self.temp_export_path = config.temp_export_path
+
+        self.target_output_path = config.target_output_path
+        self.target_export_path = config.target_export_path
+
+        self.copy_export = config.temp_export_path is not None
+
+    def deploy (self):
+        self._deploy_files (self.temp_output_path, self.target_output_path)
+
+        if self.copy_export:
+            self._deploy_files (self.temp_export_path, self.target_export_path)
+
+    def delete_temps (self):
+        shutil.rmtree (self.temp_output_path)
+
+        if self.copy_export:
+            shutil.rmtree (self.temp_export_path)

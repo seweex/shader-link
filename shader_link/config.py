@@ -96,15 +96,26 @@ class Compiler:
         self._validate ()
 
 class Config:
+    def _make_temp_output_path (self):
+        return self.target_output_path / "temp"
+
+    def _make_temp_export_path (self):
+        if self.target_export_path is not None:
+            return self.target_export_path / "temp"
+        else:
+            return None
+
     def _make_cache_path (self):
-        return self.output_path / "cache.json"
+        return self.target_output_path / "cache.json"
 
     def __init__ (self, args : Arguments, compiler : Compiler):
         self.input_path = args.input_path
-        self.output_path = args.output_path
-        self.export_path = args.export_path
+        self.target_output_path = args.output_path
+        self.target_export_path = args.export_path
 
         self.compiler_path = compiler.compiler_path
+        self.temp_output_path = self._make_temp_output_path ()
+        self.temp_export_path = self._make_temp_export_path ()
         self.cache_path = self._make_cache_path ()
 
         self.forced = args.forced

@@ -1,15 +1,23 @@
 
+import pytest
 import conftest
 
 import shader_link.app
+
+def _disable_export (config):
+    config.temp_export_path = None
+    config.target_export_path = None
+
+def _disable_forced (config):
+    config.forced = False
 
 def _run_app (config, compiler):
     app = shader_link.app.App(config)
     app.run ()
 
 def test_success (config, good_compiler, input_files, tracker):
-    config.export_path = None
-    config.forced = False
+    _disable_export (config)
+    _disable_forced (config)
 
     _run_app (config, good_compiler)
 
@@ -17,17 +25,18 @@ def test_success (config, good_compiler, input_files, tracker):
     tracker.failed_compilation.assert_not_called ()
 
 def test_fail (config, bad_compiler, input_files, tracker):
-    config.export_path = None
-    config.forced = False
+    _disable_export (config)
+    _disable_forced (config)
 
-    _run_app (config, bad_compiler)
+    with pytest.raises (Exception):
+        _run_app (config, bad_compiler)
 
     tracker.successful_compilation.assert_not_called ()
     tracker.failed_compilation.assert_called ()
 
 def test_skip (config, good_compiler, input_files, tracker):
-    config.export_path = None
-    config.forced = False
+    _disable_export (config)
+    _disable_forced (config)
 
     _run_app (config, good_compiler)
 
@@ -41,8 +50,7 @@ def test_skip (config, good_compiler, input_files, tracker):
     tracker.skip.assert_called ()
 
 def test_forced (config, good_compiler, input_files, tracker):
-    config.export_path = None
-    config.forced = True
+    _disable_export (config)
     _run_app(config, good_compiler)
 
     tracker.successful_compilation.assert_called()
