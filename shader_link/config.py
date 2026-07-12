@@ -127,4 +127,4 @@ class Config:
         self.cache_path = self._make_cache_path ()
 
         self.forced = args.forced
-        self.custom_args = args.custom_args
+        self.custom_args = ' '.join(args.custom_args.split())
