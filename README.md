@@ -54,7 +54,8 @@ python -m shader_link -f --input "path/to/file/or/dir" --output "result" --expor
 - **--output** *or* **-o**: sets up the path to output binaries (only folder), **required**
 - **--export** *or* **-e**: sets up the path to hpp-export spv (only folder), **default=None**
 - **--forced** *or* **-f**: replaces already compiled files (recompile all)
-- **--args** *or* **-a**: adds user-defined arguments to the compiler
+- **--args** *or* **-a**: adds user-defined arguments to the compiler.
+  Note: if you specify only 1 argument, use `-a="-O"` instead of using  `-a "-O"`
 
 ### Shader Source Code Requirements:
 
