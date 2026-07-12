@@ -10,9 +10,9 @@ It's a useful script to simplify GLSL shader compiling
 - Shader export to C++ headers
 - Export as constexpr std::array of binaries
 - Flexible input and output paths
+- Supports user-defined arguments
 - Caches compilations 
 - Very simple usage
-
 
 ## Setting Up
 
@@ -45,7 +45,7 @@ pip install pytest
 ## Usage 
 
 ```bash
-python -m shader_link -f --input "path/to/file/or/dir" --output "result" --export "path/to/exports"
+python -m shader_link -f --input "path/to/file/or/dir" --output "result" --export "path/to/exports" --args "-O --target-env=vulkan1.4"
 ```
 
 ### Arguments:
@@ -53,7 +53,8 @@ python -m shader_link -f --input "path/to/file/or/dir" --output "result" --expor
 - **--input** *or* **-i**: sets up the path to shader source code (file or folder), **required**
 - **--output** *or* **-o**: sets up the path to output binaries (only folder), **required**
 - **--export** *or* **-e**: sets up the path to hpp-export spv (only folder), **default=None**
-- **--forced** *or* **-f**: replaces already compiled files (recompile all) 
+- **--forced** *or* **-f**: replaces already compiled files (recompile all)
+- **--args** *or* **-a**: adds user-defined arguments to the compiler
 
 ### Shader Source Code Requirements:
 

@@ -48,27 +48,36 @@ class Compiler:
     def _submit_compilation (command: list):
         return subprocess.run (command, capture_output=True, text=True)
 
-    def _form_command (self, info : dict) -> list:
-        return [self.compiler_path, info ['input_path'], '-o', info ['output_path']]
+    def _form_command (self, info : dict, custom_args : str) -> list:
+        result = [self.compiler_path, info ['input_path'], '-o', info ['output_path']]
+
+        for arg in custom_args.split():
+            result.append(arg)
+
+        return result
 
     def __init__ (self, config : shader_link.config.Config) -> None:
         self.compiler_path = str (config.compiler_path.absolute ())
 
-    def compile (self, forced : bool, info : dict, cache : shader_link.cache.Cache) -> bool:
+    def compile (self,
+                 forced : bool,
+                 info : dict,
+                 cache : shader_link.cache.Cache,
+                 custom_args : str) -> bool:
         checksum = None
 
         if not forced:
             checksum = self.calc_checksum (info ['input_path'])
 
-            if cache.is_actual (info ['name'], checksum):
+            if cache.is_actual (info ['name'], checksum, custom_args):
                 shader_link.logger.Logger.skip (info ['name'])
                 return False
 
-        command = self._form_command (info)
+        command = self._form_command (info, custom_args)
         result = self._submit_compilation (command)
 
         if checksum is not None:
-            cache.update (info['name'], checksum)
+            cache.update (info['name'], checksum, custom_args)
 
         if result.returncode == 0:
             shader_link.logger.Logger.successful_compilation (info['name'])

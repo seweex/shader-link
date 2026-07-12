@@ -35,6 +35,13 @@ class Arguments:
             help="export shader spv files to static c++ arrays (folder to .hpp files)",
             type=str)
 
+        parser.add_argument(
+            "-a", "--args",
+            required=False,
+            default=None,
+            help="add user-defined arguments to the compiler",
+            type=str)
+
         return parser
 
     @staticmethod
@@ -73,6 +80,7 @@ class Arguments:
         self.export_path = pathlib.Path (args.export) if args.export is not None else None
 
         self.forced = bool (args.forced)
+        self.custom_args = args.args
 
         self._validate ()
 
@@ -119,3 +127,4 @@ class Config:
         self.cache_path = self._make_cache_path ()
 
         self.forced = args.forced
+        self.custom_args = args.custom_args

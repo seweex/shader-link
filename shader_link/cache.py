@@ -6,12 +6,15 @@ class Cache:
     def __init__ (self, data : dict):
         self.data: dict = data
 
-    def update (self, filename : str, checksum : str) -> None:
-        self.data [filename] = { "checksum" : checksum }
+    def update (self, filename : str, checksum : str, custom_args : str) -> None:
+        self.data [filename] = { "checksum" : checksum, "custom-args" : custom_args }
 
-    def is_actual (self, filename : str, checksum : str) -> bool:
+    def is_actual (self, filename : str, checksum : str, custom_args : str) -> bool:
         if filename in self.data:
-            return self.data [filename] ["checksum"] == checksum
+            cache_data = self.data[filename]
+
+            return cache_data["checksum"] == checksum and \
+                   cache_data["custom-args"] == custom_args
         else:
             return False
 

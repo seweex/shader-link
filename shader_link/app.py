@@ -36,7 +36,7 @@ class App:
         cache = self.cache_storage.load ()
 
         for target in self.task.input_files:
-            if not self.compiler.compile (self.config.forced, target, cache):
+            if not self.compiler.compile (self.config.forced, target, cache, self.config.custom_args):
                 continue
 
             if self.task.export:
